@@ -23,14 +23,14 @@
 - 使用 Visual Studio 2019 打开 `BigNumMultiply.sln` 项目
 - 打开菜单 `Build dependencies > Build Customizations`
 
-<img src="https://i.loli.net/2019/05/03/5ccc4100e6135.png" width="1387px">
+<img src="https://i.loli.net/2019/05/03/5ccc4100e6135.png" width="750px">
 
 - 并勾选 `masm`
 
-<img src="https://i.loli.net/2019/05/03/5ccc4100e1ec1.png" width="901px">
+<img src="https://i.loli.net/2019/05/03/5ccc4100e1ec1.png" width="550px">
 
 - 在 `Properties` > `Linker` 处添加 MASM 库的地址：`...\masm32\lib`
 
-<img src="https://i.loli.net/2019/05/03/5ccc410120c76.png" width="1574px">
+<img src="https://i.loli.net/2019/05/03/5ccc410120c76.png" width="950px">
 
 - 执行项目即可
