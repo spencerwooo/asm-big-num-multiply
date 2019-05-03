@@ -20,17 +20,17 @@
 
 项目在 Windows 10 上，利用 MASM 构建。需要 Visual Studio 环境和 MASM 编译器。
 
-- 使用 Visual Studio 2019 打开 `BigNumMultiplu.sln` 项目
+- 使用 Visual Studio 2019 打开 `BigNumMultiply.sln` 项目
 - 打开菜单 `Build dependencies > Build Customizations`
 
-![1.png](https://i.loli.net/2019/05/03/5ccc4100e6135.png)
+<img src="https://i.loli.net/2019/05/03/5ccc4100e6135.png" width="1387px">
 
 - 并勾选 `masm`
 
-![2.png](https://i.loli.net/2019/05/03/5ccc4100e1ec1.png)
+<img src="https://i.loli.net/2019/05/03/5ccc4100e1ec1.png" width="901px">
 
 - 在 `Properties` > `Linker` 处添加 MASM 库的地址：`...\masm32\lib`
 
-![3.png](https://i.loli.net/2019/05/03/5ccc410120c76.png)
+<img src="https://i.loli.net/2019/05/03/5ccc410120c76.png" width="1574px">
 
 - 执行项目即可
