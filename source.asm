@@ -5,7 +5,6 @@ option casemap:none
 includelib msvcrt.lib
 printf PROTO C :ptr sbyte, :VARARG	
 scanf PROTO C :ptr sbyte, :VARARG
-
 strlen PROTO C :ptr sbyte, :VARARG
 
 .data
@@ -33,28 +32,75 @@ length_2 dword 0
 length_res dword 0
 
 .code
-get_num1_len proc far C uses eax
-  invoke strlen, offset num_char_1
-  mov length_1, eax
-  ret
-get_num1_len endp
+; Convert each digit to int and push to stack (Reversed)
+convert_to_int proc far C, num_char :ptr byte, num_int :ptr dword, len :dword
+  mov ecx, len
+  mov esi, num_char
 
-get_num2_len proc far C uses eax
-  invoke strlen, offset num_char_2
-  mov length_2, eax
-  ret
-get_num2_len endp
+L1:
+  movzx eax, byte ptr [esi]
+  sub eax, 30h
+  push eax
+  inc esi
 
-convert_to_int proc
+  loop L1
+
+  mov ecx, len
+  mov esi, num_int 
+
+L2:
+  pop eax
+  mov dword ptr [esi], eax
+  add esi, 4
+
+  loop L2
 
   ret
 convert_to_int endp
 
-convert_to_char proc
+; Get each digit out of stack to get ready for printing (Reversed)
+convert_to_char proc far C uses eax ecx esi
+  mov ecx, length_res
+  mov esi, 0
+
+L1:
+  mov eax, dword ptr result_char[4 * esi]
+  add eax, 30h
+  push eax
+  inc esi
+
+  loop L1
+  
+  mov ecx, length_res
+  mov esi, 0
+
+L2:
+  pop eax
+  mov byte ptr result_char[esi], al
+  inc esi
+  
+  loop L2
 
   ret
 convert_to_char endp
 
+; Get number 1 length
+get_num1_len proc far C uses eax
+  invoke strlen, offset num_char_1
+  mov length_1, eax
+  invoke convert_to_int, offset num_char_1, offset num_int_1, length_1
+  ret
+get_num1_len endp
+
+; Get number 2 length
+get_num2_len proc far C uses eax
+  invoke strlen, offset num_char_2
+  mov length_2, eax
+  invoke convert_to_int, offset num_char_2, offset num_int_2, length_2
+  ret
+get_num2_len endp
+
+; Big integer multiply
 big_int_multiply proc
 
   ret
