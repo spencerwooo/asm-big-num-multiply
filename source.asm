@@ -6,6 +6,8 @@ includelib msvcrt.lib
 printf PROTO C :ptr sbyte, :VARARG	
 scanf PROTO C :ptr sbyte, :VARARG
 
+strlen PROTO C :ptr sbyte, :VARARG
+
 .data
 ; Process input numbers in char
 input byte "%s", 0
@@ -31,41 +33,41 @@ length_2 dword 0
 length_res dword 0
 
 .code
-char_to_int proc far C numChar:ptr byte, numInt:ptr byte, len:dword
-	mov ecx, len
-	mov esi, numChar
-	L1:
-		movzx eax, byte ptr [esi]
-		sub eax, 30H
-		push eax
-		inc esi
-		loop L1
+get_num1_len proc far C uses eax
+  invoke strlen, offset num_char_1
+  mov length_1, eax
+  ret
+get_num1_len endp
 
-		mov ecx, len
-		mov esi, numInt
-	L2:
-		pop eax
-		mov dword ptr [esi], eax
-		add esi, 4
-		loop L2
+get_num2_len proc far C uses eax
+  invoke strlen, offset num_char_2
+  mov length_2, eax
+  ret
+get_num2_len endp
 
-	ret
-char_to_int endp
+convert_to_int proc
 
-int_to_char proc far C uses eax esi ecx
-	mov ecx, length_res
-	mov esi, 0
-	
-	ret
-int_to_char endp
+  ret
+convert_to_int endp
+
+convert_to_char proc
+
+  ret
+convert_to_char endp
+
+big_int_multiply proc
+
+  ret
+big_int_multiply endp
 
 main proc
 	invoke printf, offset input_question_1
 	invoke scanf, offset input, offset num_char_1
 	invoke printf, offset input_question_2
 	invoke scanf, offset input, offset num_char_2
-
 	
+  invoke get_num1_len
+  invoke get_num2_len
 
 	invoke printf, offset output, offset num_char_1, offset num_char_2, offset num_char_2
 	ret
