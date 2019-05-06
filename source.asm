@@ -31,6 +31,7 @@ length_1 dword 0
 length_2 dword 0
 length_res dword 0
 
+; Decimal input numbers
 radix dword 10
 
 .code
@@ -111,20 +112,27 @@ big_int_multiply proc far C uses eax ebx ecx esi
 First_Num_Loop:
   inc ebx
   cmp ebx, length_1
+  ; Loop end if reaches end of first number
   jnb First_Loop_End
   xor ecx, ecx
 
   Second_Num_Loop:
     xor edx, edx
+
+    ; Multiply two digits and put result in EAX
     mov eax, dword ptr num_int_1[4 * ebx]
     mul num_int_2[4 * ecx]
 
+    ; Put value in EAX in result's position accordingly
     mov esi, ecx
     add esi, ebx
     add result_int[4 * esi], eax
+
+    ; Loop ends if: ecx reaches end of second number
     inc ecx
     cmp ecx, length_2
     jnb First_Num_Loop
+    ; Else: continue second number loop
     jmp Second_Num_Loop
 
 First_Loop_End:
@@ -132,20 +140,28 @@ First_Loop_End:
   add ecx, length_2
   inc ecx
   mov esi, offset length_res
+  ; Get result's length (Value of ECX)
   mov [esi], ecx
+
   xor ebx, ebx
 
 Calc_Carry:
+  ; If no carries left, carry loop ends
   cmp ebx, ecx
   jnb Second_Loop_End
+
   mov eax, result_int[ebx * 4]
+  ; result_int[ptr + 1] = result[ptr] + result[ptr] / 10
   xor edx, edx
   div radix
   add result_int[ebx * 4 + 4], eax
+  ; result_int[ptr] = result[ptr] % 10
   mov result_int[ebx * 4], edx
   inc ebx
   jmp Calc_Carry
 
+; Check for leading zeros:
+; (From the end of the result, because result is reversed.)
 Second_Loop_End:
   mov ecx, length_res
 
@@ -159,22 +175,28 @@ End_Loop:
   inc ecx
   mov esi, offset length_res
   mov [esi], ecx
+  ; Convert result_int (dword) to reversed result_char (byte) for result printing
   invoke convert_to_char
 
   ret
 big_int_multiply endp
 
 main proc
+  ; Input the first number
 	invoke printf, offset input_question_1
 	invoke scanf, offset input, offset num_char_1
+  ; Input the second number
 	invoke printf, offset input_question_2
 	invoke scanf, offset input, offset num_char_2
 	
+  ; Get length of input numbers, and convert each digit to dword stack
   invoke get_num1_len
   invoke get_num2_len
 
+  ; Multiplication!
   invoke big_int_multiply
 
+  ; Print final result
 	invoke printf, offset output, offset num_char_1, offset num_char_2, offset result_char
 	ret
 main endp
